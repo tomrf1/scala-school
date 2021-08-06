@@ -1,1 +1,3 @@
 GET /helloworld     controllers.HelloWorldController.helloworld
+
+GET /content/*path  controllers.ContentController.content(path)

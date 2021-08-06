@@ -1,11 +1,16 @@
 package services
 
-// TODO - any class parameters?
-class CapiService() {
+import play.api.libs.ws.WSClient
 
-  // TODO - what should this return?
-  def fetchContent(path: String): Unit = {
-    // TODO - make an http request to CAPI
-  }
+import scala.concurrent.{ExecutionContext, Future}
 
+class CapiService(wsClient: WSClient)(implicit ec: ExecutionContext) {
+  val url = "https://content.guardianapis.com"
+  val apiKey = "test"
+
+  def fetchContent(path: String): Future[String] =
+    wsClient
+      .url(s"$url/$path?api-key=$apiKey")
+      .get()
+      .map(response => response.body)
 }

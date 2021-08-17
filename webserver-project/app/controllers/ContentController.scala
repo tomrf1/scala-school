@@ -1,7 +1,9 @@
 package controllers
 
-import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{CapiNotFound, CapiServerError, CapiService}
+import models.Content.contentEncoder
+import play.api.mvc.{AbstractController, ControllerComponents}
+import io.circe.syntax._
 
 import scala.concurrent.ExecutionContext
 
@@ -10,7 +12,7 @@ class ContentController(components: ControllerComponents, capiService: CapiServi
     capiService
       .fetchContent(path)
       .map {
-        case Right(content) => Ok(content)
+        case Right(content) => Ok(content.asJson.noSpaces)
         case Left(CapiNotFound()) => NotFound(s"Not found: $path")
         case Left(CapiServerError(message)) => InternalServerError(s"Capi says: $message")
       }

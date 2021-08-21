@@ -5,6 +5,7 @@ case class JsonNumber(d: Double) extends Json
 case class JsonString(s: String) extends Json
 case class JsonArray(arr: List[Json]) extends Json
 case class JsonObject(map: Map[String,Json]) extends Json
+case class JsonNull() extends Json
 
 object Json {
   // We'd need to parse stringified json into this Json model. E.g.
@@ -36,6 +37,12 @@ object Encoder {
   // instances of the Encoder type class:
   implicit val stringEncoder: Encoder[String] = (s: String) => JsonString(s)
   implicit val booleanEncoder: Encoder[Boolean] = (b: Boolean) => JsonBool(b)
+  // we can even define instances for nested types, e.g. for an Option[A], where A must also have an Encoder
+  // (this is called 'recursive type class inference')
+  implicit def optionEncoder[A](implicit enc: Encoder[A]): Encoder[Option[A]] = {
+    case Some(a) => enc(a)
+    case None => JsonNull()
+  }
 
   // a "type class interface" for Encoder:
   def encode[A](a: A)(implicit encoder: Encoder[A]): Json = encoder(a)
@@ -44,6 +51,9 @@ object Encoder {
 // When we call `encode`, scala finds the right implicit Encoder instance
 val jsonString: Json = Encoder.encode("a string")
 val jsonBool: Json = Encoder.encode(true)
+
+val maybeBool: Option[Boolean] = Some(true)
+val jsonMaybeBool: Json = Encoder.encode(maybeBool) // uses optionEncoder and booleanEncoder
 
 
 object Decoder {
@@ -56,6 +66,10 @@ object Decoder {
     case JsonBool(b) => Right(b)
     case other => Left(s"Not a boolean: $other")
   }
+  implicit def optionDecoder[A](implicit dec: Decoder[A]): Decoder[Option[A]] = {
+    case JsonNull() => Right(None)
+    case other => dec(other).map(Some(_))
+  }
 
   // a "type class interface" for Decoder:
   def decode[A](json: Json)(implicit decoder: Decoder[A]): Either[String, A] = decoder(json)
@@ -64,3 +78,4 @@ object Decoder {
 // When we call `decode`, scala finds the right implicit Decoder instance
 val string: Either[String, String] = Decoder.decode[String](jsonString)
 val bool: Either[String, Boolean] = Decoder.decode[Boolean](jsonBool)
+val maybeString: Either[String, Option[String]] = Decoder.decode[Option[String]](JsonString("a string")) // uses optionDecoder and stringDecoder

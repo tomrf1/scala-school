@@ -1,31 +1,48 @@
 import scala.util.Try
 
-type UserId = String
-def getUser(email: String): Either[String,UserId] = ???
-def createUser(email: String): Either[String,UserId] = ???
+object UserStore {
+  type UserId = String
+
+  def getUser(email: String): Either[String,UserId] = if (email == "a@gu.com") Right("1") else Left("Not found")
+  def createUser(email: String): Either[String,UserId] = Right("2")
+}
+
+def validateEmail(email: String): Either[String,String] = if (email.contains("@")) Right(email) else Left("Invalid email")
 
 object DodgyJavaSdk {
   // Might throw an exception!
-  def executePayment(amount: Int, userId: String): Boolean = ???
+  def executePayment(amount: Int, userId: String): Unit = if (amount > 0) () else throw new Exception("Invalid amount")
 }
 
 case class Request(amount: Int, email: String)
 type HttpStatus = Int
 
+/**
+ * 1. validate the email
+ * 2. get or create a user ID
+ * 3. execute the payment
+ * 4. return a 200 status on success
+ */
 def handleRequest(request: Request): HttpStatus = {
-  val result: Either[String, Boolean] = getUser(request.email)
-    .orElse(createUser(request.email))
-    .flatMap(id =>
-      Try(DodgyJavaSdk.executePayment(request.amount, id))
-        .toEither
-        .left.map(_.getMessage)
-    )
+  import UserStore._
+
+  val result: Either[String, Unit] = for {
+    email <- validateEmail(request.email)
+    userId <- getUser(request.email).orElse(createUser(request.email))
+    execution <- Try(DodgyJavaSdk.executePayment(request.amount, userId))
+      .toEither
+      .left.map(_.getMessage)
+  } yield execution
 
   result match {
-    case Right(true) => 200
-    case Right(false) => 500
+    case Right(_) => 200
     case Left(err) =>
       println(err)
       500
   }
 }
+
+assert(handleRequest(Request(1,"a@gu.com")) == 200)
+assert(handleRequest(Request(1,"b@gu.com")) == 200)
+assert(handleRequest(Request(1,"bgu.com")) == 500)
+assert(handleRequest(Request(0,"b@gu.com")) == 500)

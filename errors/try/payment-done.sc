@@ -14,7 +14,7 @@ object DodgyJavaSdk {
   def executePayment(amount: Int, userId: String): Unit = if (amount > 0) () else throw new Exception("Invalid amount")
 }
 
-case class Request(amount: Int, email: String)
+case class ContributionRequest(amount: Int, email: String)
 type HttpStatus = Int
 
 /**
@@ -23,7 +23,7 @@ type HttpStatus = Int
  * 3. execute the payment
  * 4. return a 200 status on success
  */
-def handleRequest(request: Request): HttpStatus = {
+def processContribution(request: ContributionRequest): HttpStatus = {
   import UserStore._
 
   val result: Either[String, Unit] = for {
@@ -42,7 +42,7 @@ def handleRequest(request: Request): HttpStatus = {
   }
 }
 
-assert(handleRequest(Request(1,"a@gu.com")) == 200)
-assert(handleRequest(Request(1,"b@gu.com")) == 200)
-assert(handleRequest(Request(1,"bgu.com")) == 500)
-assert(handleRequest(Request(0,"b@gu.com")) == 500)
+assert(processContribution(ContributionRequest(1,"a@gu.com")) == 200)
+assert(processContribution(ContributionRequest(1,"b@gu.com")) == 200)
+assert(processContribution(ContributionRequest(1,"bgu.com")) == 500)
+assert(processContribution(ContributionRequest(0,"b@gu.com")) == 500)

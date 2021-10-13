@@ -8,10 +8,10 @@ val either2: Either[String,Int] = Left("error!")
 /**
  * Transforming the either
  */
-// map - transform the value inside the either, if it exists
+// map - transform the value inside, if it's a Right
 val doubled: Either[String,Int] = either1.map(n => n*2)
 
-// flatMap - transform the value inside, with a function that returns an either
+// flatMap - transform the value inside (if it's a Right), with a function that returns an either
 val add: Either[String,Int] = either1.flatMap(n1 => either2.map(n2 => n1 + n2))
 
 val addForYield: Either[String,Int] = for {
@@ -19,6 +19,8 @@ val addForYield: Either[String,Int] = for {
   n2 <- either2 // map
 } yield n1 + n2
 
+// orElse
+val maybe: Either[String,Int] = either1.orElse(either2)
 
 /**
  * Escaping the either

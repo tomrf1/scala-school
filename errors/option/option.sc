@@ -1,21 +1,31 @@
+/**
+ * Creating an option
+ */
 val option1: Option[Int] = Some(1)
 val option2: Option[Int] = None
 
-// map
+
+/**
+ * Transforming the option
+ */
+// map - transform the value inside the option, if it exists
 val doubled: Option[Int] = option1.map(n => n*2)
 
-// flatmap
+// flatmap - transform the value inside, with a function that returns an option
 val add: Option[Int] = option1.flatMap(n1 => option2.map(n2 => n1 + n2))
 
 val addForYield: Option[Int] = for {
-  n1 <- option1
-  n2 <- option2
-} yield n1 + n2
+  n1 <- option1 // flatmap
+  n2 <- option2 // map
+} yield n1 + n2 // inside the map
 
 // orElse
 val maybe: Option[Int] = option1.orElse(option2)
 
-// escaping the option
+
+/**
+ * Escaping the option
+ */
 val result1: Int = option1 match {
   case Some(n) => n
   case None => 0

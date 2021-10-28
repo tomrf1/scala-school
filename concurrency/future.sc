@@ -30,3 +30,10 @@ future1.onComplete {
   case Success(value) => println(value)
   case Failure(err) => println(err.getMessage)
 }
+
+// Working with lists of futures
+val listOfFutures = List(future1, future2)
+val futureOfList = Future.sequence(listOfFutures)
+
+val results: List[Int] = Await.result(futureOfList, 10.seconds)
+

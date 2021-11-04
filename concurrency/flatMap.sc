@@ -2,33 +2,37 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
-def sleepyPrint(msg: String): Future[Unit] =
+def sleepyAdder(a: Int, b: Int): Future[Int] =
   Future {
-    println(s"$msg sleeping...")
+    println(s"${a}+${b} sleeping...")
     Thread.sleep(2000)
-    println(s"$msg awoke")
+    println(s"${a}+${b} awoke")
+    a + b
   }
 
-def sequential(): Unit = {
+def sequentialAdder(): Unit = {
   // Create the Futures in sequence
-  val result: Future[Unit] = for {
-    _ <- sleepyPrint("a")
-    _ <- sleepyPrint("b")
-  } yield ()
+  val result: Future[Int] = for {
+    sum <- sleepyAdder(1, 1)
+    biggerSum <- sleepyAdder(sum, 1)
+  } yield biggerSum
 
-  Await.result(result, 10.seconds)
+  val finalSum = Await.result(result, 10.seconds)
+  println(s"Final sum: $finalSum")
 }
 
-def parallel(): Unit = {
+def parallelAdder(): Unit = {
   // Kick off both Futures now...
-  val futureA = sleepyPrint("a")
-  val futureB = sleepyPrint("b")
+  val futureA = sleepyAdder(1, 1)
+  // cannot depend on result of futureA here
+  val futureB = sleepyAdder(1, 1)
 
   // ...then flatMap them
-  val result: Future[Unit] = for {
+  val result: Future[Int] = for {
     _ <- futureA
-    _ <- futureB
-  } yield ()
+    anotherSum <- futureB
+  } yield anotherSum
 
-  Await.result(result, 10.seconds)
+  val finalSum = Await.result(result, 10.seconds)
+  println(s"Final sum: $finalSum")
 }

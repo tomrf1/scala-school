@@ -17,17 +17,19 @@ Shows how Futures are eager - they can kick off the computation as soon as you c
 ```
 concurrency$ amm -p flatMap.sc
 Loading...
-Welcome to the Ammonite Repl 2.2.0 (Scala 2.13.3 Java 11.0.10)
-@ sequential()
-a sleeping...
-a awoke
-b sleeping...
-b awoke
+Welcome to the Ammonite Repl 2.2.0 (Scala 2.13.3 Java 1.8.0_202)
+@ sequentialAdder()
+1+1 sleeping...
+1+1 awoke
+2+1 sleeping...
+2+1 awoke
+Final sum: 3
 
 
-@ parallel()
-b sleeping...
-a sleeping...
-b awoke
-a awoke
+@ parallelAdder()
+1+1 sleeping...
+1+1 sleeping...
+1+1 awoke
+1+1 awoke
+Final sum: 2
 ```

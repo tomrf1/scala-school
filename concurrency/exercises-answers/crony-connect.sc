@@ -39,4 +39,10 @@ def getCronies(kingpin: Person): Future[Set[Person]] = {
   } yield cronies.toSet.filterNot(_ == kingpin)
 }
 
-Await.result(getCronies(Person("Ronald McDonald")), 10.seconds)
+// Ammonite doesn't like calling Await.result at the top level.
+// So to test run:
+//
+// amm -p cony-connect.sc
+//
+// In REPL:
+// Await.result(getCronies(Person("Ronald McDonald")), 10.seconds)

@@ -1,0 +1,1 @@
+GET /officer/:id/connections    controllers.CompaniesHouseController.getConnections(id: String)

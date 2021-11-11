@@ -6,7 +6,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: ExecutionContext) {
 
-  def getAppointments(officerId: String): Future[String] = {
+  def getAppointmentsRaw(officerId: String): Future[String] = {
     wsClient
       .url("TODO")
       .withAuth(apiKey,"", WSAuthScheme.BASIC)

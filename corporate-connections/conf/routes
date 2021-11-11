@@ -1,1 +1,2 @@
+GET /officer/:id/appointments   controllers.CompaniesHouseController.getAppointments(id: String)
 GET /officer/:id/connections    controllers.CompaniesHouseController.getConnections(id: String)

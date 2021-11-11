@@ -14,6 +14,6 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
 
   override lazy val router: Router = new Routes(
     httpErrorHandler,
-    new CompaniesHouseController(controllerComponents)
+    new CompaniesHouseController(controllerComponents, companiesHouseService)
   )
 }

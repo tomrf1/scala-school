@@ -1,8 +1,9 @@
 package services
 
 import play.api.libs.ws.{WSAuthScheme, WSClient}
-
+import io.circe.parser.decode
 import scala.concurrent.{ExecutionContext, Future}
+import models._
 
 class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: ExecutionContext) {
 
@@ -10,13 +11,19 @@ class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: Exe
     wsClient
       .url(s"https://api.company-information.service.gov.uk/officers/${officerId}/appointments")
       .withAuth(apiKey,"", WSAuthScheme.BASIC)
-      .get
+      .get()
       .map(_.body)
   }
   
   // TODO - what should this return?
-  def getCompanies(officerId: String): Unit = {
+  def getCompanies(officerId: String): Future[Either[io.circe.Error, List[CompanyLink]]] = {
     // TODO - get list of companies linked to officer
+    getAppointmentsRaw(officerId).map { rawAppoints => 
+      decode[OfficerAppointmentResponse](rawAppoints)
+        .map { appointments => 
+          appointments.items.map(_.links)
+        }
+      }
   }
 
   // TODO - what should this return?

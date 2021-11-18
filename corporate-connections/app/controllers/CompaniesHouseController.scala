@@ -2,18 +2,19 @@ package controllers
 
 import play.api.mvc._
 import services.CompaniesHouseService
-
 import scala.concurrent.{ExecutionContext, Future}
+import io.circe.syntax._
+import models.OfficerAppointmentResponse.companiesEncoder
 
 class CompaniesHouseController(components: ControllerComponents, companiesHouseService: CompaniesHouseService)(implicit ec: ExecutionContext) extends AbstractController(components) {
   def getAppointments(officerId: String) = Action.async {
-    //4qNZbLoGVKMeONMg6NznDe76JpnLjI1XcEXDhVeB
     companiesHouseService.getAppointmentsRaw(officerId).map(Ok(_))
   }
 
   def getConnections(officerId: String) = Action.async {
-    Future {
-      Ok(s"hello $officerId")
-    }
+      companiesHouseService.getCompanies(officerId).map { 
+        case Right(companies) => Ok(companies.asJson.noSpaces)
+        case Left(error) => InternalServerError(error.getMessage())
+      }
   }
 }

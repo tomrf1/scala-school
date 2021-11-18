@@ -14,6 +14,14 @@ class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: Exe
       .get()
       .map(_.body)
   }
+
+  def getOfficersRaw(companyId: String): Future[String] = {
+    wsClient
+      .url(s"https://api.company-information.service.gov.uk/company/${companyId}/officers")
+      .withAuth(apiKey,"", WSAuthScheme.BASIC)
+      .get()
+      .map(_.body)
+  }
   
   // TODO - what should this return?
   def getCompanies(officerId: String): Future[Either[io.circe.Error, List[CompanyLink]]] = {
@@ -27,7 +35,11 @@ class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: Exe
   }
 
   // TODO - what should this return?
-  def getOfficers(companyId: String): Unit = {
+  def getOfficers(companyId: String): Future[Either[io.circe.Error, List[Officer]]] = {
     // TODO - get list of officers linked to company
+    getOfficersRaw(companyId).map { rawOfficers => 
+      decode[CompanyOfficersResponse](rawOfficers)
+        .map(_.items)
+      }
   }
 }

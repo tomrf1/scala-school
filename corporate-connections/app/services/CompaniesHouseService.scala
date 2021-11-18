@@ -8,9 +8,10 @@ class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: Exe
 
   def getAppointmentsRaw(officerId: String): Future[String] = {
     wsClient
-      .url("TODO")
+      .url(s"https://api.company-information.service.gov.uk/officers/${officerId}/appointments")
       .withAuth(apiKey,"", WSAuthScheme.BASIC)
       .get
+      .map(_.body)
   }
   
   // TODO - what should this return?

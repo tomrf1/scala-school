@@ -3,23 +3,30 @@ package services
 import play.api.libs.ws.{WSAuthScheme, WSClient}
 
 import scala.concurrent.{ExecutionContext, Future}
+import io.circe.parser.decode
+import models.{CompanyLink, CompanyOfficersResponse, Officer, OfficerAppointmentResponse}
 
 class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: ExecutionContext) {
 
   def getAppointmentsRaw(officerId: String): Future[String] = {
     wsClient
-      .url("TODO")
+      .url(s"https://api.company-information.service.gov.uk/officers/${officerId}/appointments")
       .withAuth(apiKey,"", WSAuthScheme.BASIC)
       .get
+      .map(_.body)
   }
   
-  // TODO - what should this return?
-  def getCompanies(officerId: String): Unit = {
-    // TODO - get list of companies linked to officer
+  def getCompanies(officerId: String): Future[Either[io.circe.Error, List[CompanyLink]]] = {
+    getAppointmentsRaw(officerId)
+      .map(json => decode[OfficerAppointmentResponse](json).map(_.items.map(_.links)))
   }
 
-  // TODO - what should this return?
-  def getOfficers(companyId: String): Unit = {
-    // TODO - get list of officers linked to company
+  def getOfficers(companyId: String): Future[Either[io.circe.Error, List[Officer]]] = {
+    wsClient
+      .url(s"https://api.company-information.service.gov.uk/${companyId}/officers")
+      .withAuth(apiKey,"", WSAuthScheme.BASIC)
+      .get
+      .map(_.body)
+      .map(json => decode[CompanyOfficersResponse](json).map(_.items))
   }
 }

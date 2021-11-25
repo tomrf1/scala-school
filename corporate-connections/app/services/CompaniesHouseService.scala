@@ -17,7 +17,7 @@ class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: Exe
 
   def getOfficersRaw(companyId: String): Future[String] = {
     wsClient
-      .url(s"https://api.company-information.service.gov.uk/company/${companyId}/officers")
+      .url(s"https://api.company-information.service.gov.uk/${companyId}/officers")
       .withAuth(apiKey,"", WSAuthScheme.BASIC)
       .get()
       .map(_.body)

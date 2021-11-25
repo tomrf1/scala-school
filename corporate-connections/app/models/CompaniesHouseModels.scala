@@ -20,4 +20,6 @@ object CompanyOfficersResponse {
   // JSON decoding? See https://circe.github.io/circe/codecs/auto-derivation.html
   implicit val officersResponseDecoder = Decoder[CompanyOfficersResponse]
   implicit val officersEncoder = Encoder[Set[Officer]]
+  implicit val connectionsEncoder = Encoder[Map[String,List[Officer]]]
 }
+

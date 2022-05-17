@@ -6,6 +6,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import io.circe.parser.decode
 import models.{CompanyLink, CompanyOfficersResponse, Officer, OfficerAppointmentResponse}
 
+import scala.util.matching.Regex
+
 class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: ExecutionContext) {
 
   def getAppointmentsRaw(officerId: String): Future[String] = {
@@ -15,9 +17,11 @@ class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: Exe
       .get
       .map(_.body)
   }
-  
+
   def getCompanies(officerId: String): Future[Either[io.circe.Error, List[CompanyLink]]] = {
-    getAppointmentsRaw(officerId)
+    val appointmentsLinkPattern: Regex = "(?<=/)[A-Za-z0-9_-]*(?=/appointments$)".r
+    val matches = appointmentsLinkPattern.findFirstIn(officerId)
+    getAppointmentsRaw(matches.getOrElse(officerId))
       .map(json => decode[OfficerAppointmentResponse](json).map(_.items.map(_.links)))
   }
 

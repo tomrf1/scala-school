@@ -10,10 +10,13 @@ case class OfficerAppointmentResponse(items: List[Appointment])
 object OfficerAppointmentResponse {
   // JSON decoding? See https://circe.github.io/circe/codecs/auto-derivation.html
   implicit val appointmentResponseDecoder = Decoder[OfficerAppointmentResponse]
+  implicit val companiesEncoder = Encoder[CompanyLink]
 }
 
 
-case class Officer(name: String, officer_role: String)
+case class OfficerLinks(appointments: String)
+case class Links(officer: OfficerLinks)
+case class Officer(name: String, officer_role: String, links: Links)
 case class CompanyOfficersResponse(items: List[Officer])
 
 object CompanyOfficersResponse {

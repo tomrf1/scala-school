@@ -27,4 +27,8 @@ size(t)
 
 def sum(tree: BinaryTree): Int = ???
 
+sum(t)
+
 def map(f: Int => Int, tree: BinaryTree): BinaryTree = ???
+
+map(n => n*2, t) // double each value

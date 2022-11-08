@@ -11,7 +11,11 @@ val future1: Future[Int] = Future.successful(1)
 val future2: Future[Int] = Future.failed(new Exception("error!"))
 
 // Construct a Future which completes sometime in the future, as determined by the given implicit ExecutionContext
-val future3: Future[Int] = Future(1)  // same as Future.apply(1)
+val future3: Future[Int] = Future {
+  val a = 1
+  val b = 2
+  a + b
+}
 
 /**
  * Transforming the Future

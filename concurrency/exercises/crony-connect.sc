@@ -1,5 +1,9 @@
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
+
+case class Person(name: String)
+case class Company(id: Int, name: String)
 
 object CompaniesHouseService {
   def getCompaniesOwned(person: Person): Future[List[Company]] = Future.successful(List(
@@ -19,16 +23,7 @@ object CompaniesHouseService {
   }
 }
 
-case class Person(name: String)
-case class Company(id: Int, name: String)
-
 // TASK
 def getCronies(kingpin: Person): Future[List[Person]] = ???
 
-// Ammonite doesn't like calling Await.result at the top level.
-// So to test run:
-//
-// amm -p cony-connect.sc
-//
-// In REPL:
-// Await.result(getCronies(Person("Ronald McDonald")), 10.seconds)
+Await.result(getCronies(Person("Ronald McDonald")), 10.seconds)

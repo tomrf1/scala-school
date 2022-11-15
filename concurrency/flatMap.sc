@@ -36,3 +36,18 @@ def parallelAdder(): Unit = {
   val finalSum = Await.result(result, 10.seconds)
   println(s"Final sum: $finalSum")
 }
+
+def sequentialThenParallelAdder(): Unit = {
+  val result: Future[Int] = for {
+    four <- sleepyAdder(2, 2)
+    // These can depend on four,
+    // but not on each other.
+    futureFiveA = sleepyAdder(four, 1)
+    futureFiveB = sleepyAdder(four, 1)
+    fiveA <- futureFiveA
+    fiveB <- futureFiveB
+  } yield (fiveA + fiveB)
+
+  val finalSum = Await.result(result, 10.seconds)
+  println(s"Final sum: $finalSum")
+}

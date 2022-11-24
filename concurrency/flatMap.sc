@@ -1,6 +1,10 @@
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
+
+implicit def ec = ExecutionContext.fromExecutor(
+  new java.util.concurrent.ForkJoinPool(10)
+)
 
 def sleepyAdder(a: Int, b: Int): Future[Int] =
   Future {
@@ -51,3 +55,10 @@ def sequentialThenParallelAdder(): Unit = {
   val finalSum = Await.result(result, 10.seconds)
   println(s"Final sum: $finalSum")
 }
+
+sequentialAdder()
+
+println
+println
+
+parallelAdder()

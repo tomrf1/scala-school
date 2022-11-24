@@ -1,8 +1,8 @@
-scalaVersion := "2.13.6"
+scalaVersion := "2.13.10"
 
 enablePlugins(PlayScala)
 
-val circeVersion = "0.14.1"
+val circeVersion = "0.14.3"
 
 libraryDependencies ++= Seq(
   ws,

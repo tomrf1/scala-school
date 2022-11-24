@@ -11,6 +11,7 @@ class CompaniesHouseService(wsClient: WSClient, apiKey: String)(implicit ec: Exe
       .url("TODO")
       .withAuth(apiKey,"", WSAuthScheme.BASIC)
       .get
+      .map(response => "TODO")
   }
   
   // TODO - what should this return?

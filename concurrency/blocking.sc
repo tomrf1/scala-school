@@ -1,7 +1,6 @@
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
-import UserStore._
 
 object UserStore {
   case class User(name: String)
@@ -10,6 +9,8 @@ object UserStore {
 
   def fetch(id: String): Future[String] = Future.successful(s"Mr Test$id")
 }
+
+import UserStore._
 
 def fetchUserNameBlocking(id: String): String = {
   // blocks this thread until fetch completes

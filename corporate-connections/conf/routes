@@ -1,2 +1,11 @@
-GET /officer/:id/appointments   controllers.CompaniesHouseController.getAppointments(id: String)
-GET /officer/:id/connections    controllers.CompaniesHouseController.getConnections(id: String)
+# Task 1: proxy appointments data for an officer
+GET /officer/:officerId/appointmentsProxy   controllers.CompaniesHouseController.getAppointmentsProxy(officerId: String)
+
+# Task 2: return companyIds for an officer
+#GET /officer/:officerId/appointments   controllers.CompaniesHouseController.getAppointments(officerId: String)
+
+# Task 3: return officer names for a given companyId
+#GET /company/:companyId/officers   controllers.CompaniesHouseController.getOfficers(companyId: String)
+
+# Task 4: return connected officer names for a given officerId
+#GET /officer/:officerId/connections    controllers.CompaniesHouseController.getConnections(officerId: String)

@@ -1,7 +1,7 @@
 package models
 
-case class CompanyLink(company: String)
-case class Appointment(officer_role: String, links: CompanyLink)
+case class AppointedTo(company_name: String, company_number: String, company_status: String)
+case class Appointment(officer_role: String, appointed_to: AppointedTo)
 case class OfficerAppointmentResponse(items: List[Appointment])
 
 object OfficerAppointmentResponse {

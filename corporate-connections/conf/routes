@@ -1,4 +1,4 @@
-# Task 1: proxy appointments data for an officer
+# Task 1: proxy appointments data for an officer (i.e. just pass through Companies House API response unaltered)
 GET /officer/:officerId/appointmentsProxy   controllers.CompaniesHouseController.getAppointmentsProxy(officerId: String)
 
 # Task 2: return companyIds for an officer

@@ -7,7 +7,7 @@ E.g. for officerId `aEdQfmEjiBuB7tLwOP_Wfg-JA-8`, this curl request returns thei
 
 `curl -XGET -u <api-key>: https://api.company-information.service.gov.uk/officers/aEdQfmEjiBuB7tLwOP_Wfg-JA-8/appointments`
 
-And for companyId `03114488`, this curl request returns its officers:
+And for companyNumber `03114488`, this curl request returns its officers:
 
 `curl -XGET -u <api-key>: https://api.company-information.service.gov.uk/company/03114488/officers`
 
@@ -39,17 +39,17 @@ E.g. for officerId `aEdQfmEjiBuB7tLwOP_Wfg-JA-8`: `https://api.company-informati
 
 Build on the `CompaniesHouseService` class in the `services` package for talking to the Companies House API.
 
-### Task 2: return company names for an officer
+### Task 2: return companyNumbers for an officer
 Implement the `/officer/:officerId/appointments` endpoint.
 
 Use Circe to decode the Companies House response into Scala case classes. Use the `OfficerAppointmentResponse` model in `models/CompaniesHouseModels.scala`.
 
-Then return just the list of companies as a JSON array.
+Then return just the list of companyNumbers, as a JSON array.
 
-### Task 3: return officer names for a given companyId
-Implement the `/company/:companyId/officers` endpoint.
+### Task 3: return officer names for a given companyNumber
+Implement the `/company/:companyNumber/officers` endpoint.
 
-E.g. for companyId 03114488: `https://api.company-information.service.gov.uk/company/03114488/officers`
+E.g. for companyNumber 03114488: `https://api.company-information.service.gov.uk/company/03114488/officers`
 
 Use Circe to decode the Companies House response into Scala case classes. Use the `CompanyOfficersResponse` model in `models/CompaniesHouseModels.scala`.
 
